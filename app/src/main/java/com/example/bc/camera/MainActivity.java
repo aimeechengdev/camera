@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +17,7 @@ import android.widget.Toast;
 import java.io.File;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
     TextView flowerName;
     private File imageFile;
     @Override
@@ -62,6 +63,7 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      //  super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case Activity.RESULT_OK:
                 if(imageFile.exists()){
@@ -71,6 +73,7 @@ public class MainActivity extends Activity {
                 }
                 break;
             case Activity.RESULT_CANCELED:
+         //       Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
                 Toast.makeText(this, "canceled", Toast.LENGTH_LONG).show();
                 break;
             default:
