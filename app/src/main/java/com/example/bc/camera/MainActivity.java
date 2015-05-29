@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,7 +52,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void openCamera(View view){
-        Intent intent = new Intent( );
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         imageFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "flower.jpg");
         Uri tmpuri = Uri.fromFile(imageFile);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, tmpuri);
@@ -63,7 +63,6 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //  super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case Activity.RESULT_OK:
                 if(imageFile.exists()){
@@ -73,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
                 }
                 break;
             case Activity.RESULT_CANCELED:
-         //       Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
                 Toast.makeText(this, "canceled", Toast.LENGTH_LONG).show();
                 break;
             default:
