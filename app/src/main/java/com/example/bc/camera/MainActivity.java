@@ -63,6 +63,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        flowerName.setText("requestCode " + requestCode +" --- " + resultCode + " --- "+imageFile.exists());
         switch (requestCode){
             case Activity.RESULT_OK:
                 if(imageFile.exists()){
@@ -72,7 +73,7 @@ public class MainActivity extends ActionBarActivity {
                 }
                 break;
             case Activity.RESULT_CANCELED:
-                Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+    //            Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
                 Toast.makeText(this, "canceled", Toast.LENGTH_LONG).show();
                 break;
             default:
