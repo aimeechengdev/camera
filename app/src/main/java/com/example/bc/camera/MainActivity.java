@@ -23,9 +23,11 @@ import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
@@ -80,7 +82,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void doPostRequest(){
-        String urlString = "http://flower-aimeechengdev.c9.io/testpost";
+        String urlString = "https://flower-aimeechengdev.c9.io/testpost";
         try
         {
             HttpClient client = new DefaultHttpClient();
@@ -96,9 +98,17 @@ public class MainActivity extends ActionBarActivity {
 
             HttpResponse response = client.execute(post);
             String response_str = response.toString();
-            flowerName.setText(response_str);
+            int statusCode = response.getStatusLine().getStatusCode();
+
+            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+// Response Body
+            String responseBody = responseHandler.handleResponse(response);
+  //          Toast.makeText(this, Integer.toString(statusCode), Toast.LENGTH_LONG).show();
+  //          Toast.makeText(this, responseBody, Toast.LENGTH_LONG).show();
+         //   flowerName.setText(responseBody);
         }
         catch (Exception ex){
+          //  Toast.makeText(this, "error in post", Toast.LENGTH_LONG).show();
             Log.e("Debug", "error1: " + ex.getMessage(), ex);
         }
     }
