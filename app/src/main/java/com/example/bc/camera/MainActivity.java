@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
@@ -68,9 +69,18 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private void doPostRequest(){
+    private class Connection extends AsyncTask {
 
-        String urlString = "http://flower-aimeechengdev.c9.io/test";
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            doPostRequest();
+            return null;
+        }
+
+    }
+
+    private void doPostRequest(){
+        String urlString = "http://flower-aimeechengdev.c9.io/testpost";
         try
         {
             HttpClient client = new DefaultHttpClient();
@@ -89,7 +99,7 @@ public class MainActivity extends ActionBarActivity {
             flowerName.setText(response_str);
         }
         catch (Exception ex){
-            Log.e("Debug", "error: " + ex.getMessage(), ex);
+            Log.e("Debug", "error1: " + ex.getMessage(), ex);
         }
     }
     public void openCamera(View view){
@@ -115,7 +125,8 @@ public class MainActivity extends ActionBarActivity {
                     try{
                         bitmap = MediaStore.Images.Media.getBitmap(cr, imgUri);
                         imageView.setImageBitmap(bitmap);
-                        doPostRequest();
+                        Toast.makeText(this, "before dopost", Toast.LENGTH_LONG).show();
+                        new Connection().execute();
                     }catch(Exception e){
 
                     }
