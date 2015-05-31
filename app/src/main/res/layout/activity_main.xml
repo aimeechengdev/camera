@@ -30,6 +30,13 @@
         android:text="Open your photo library"
         android:id="@+id/button2"
         android:onClick="openFile"/>
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload image"
+        android:id="@+id/uploadImage"
+        android:onClick="uploadImage"/>
+
     <ImageView
         android:id="@+id/photo"
         android:contentDescription="photo will be placed here"
