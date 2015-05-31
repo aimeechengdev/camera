@@ -70,7 +70,7 @@ public class MainActivity extends ActionBarActivity {
     }
     private void doPostRequest(){
 
-        String urlString = "http://rasnacis.lv/vova.php";
+        String urlString = "http://flower-aimeechengdev.c9.io/test";
         try
         {
             HttpClient client = new DefaultHttpClient();
