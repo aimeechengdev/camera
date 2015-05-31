@@ -85,7 +85,8 @@ public class MainActivity extends ActionBarActivity {
             post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
             HttpResponse response = client.execute(post);
-            final String response_str = response.toString();
+            String response_str = response.toString();
+            flowerName.setText(response_str);
         }
         catch (Exception ex){
             Log.e("Debug", "error: " + ex.getMessage(), ex);
@@ -114,6 +115,7 @@ public class MainActivity extends ActionBarActivity {
                     try{
                         bitmap = MediaStore.Images.Media.getBitmap(cr, imgUri);
                         imageView.setImageBitmap(bitmap);
+                        doPostRequest();
                     }catch(Exception e){
 
                     }
