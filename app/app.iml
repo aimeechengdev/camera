@@ -88,8 +88,36 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 22 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="appcompat-v7-22.1.1" level="project" />
-    <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-ab-4.4.1" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-dom-0.7.2-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-core-0.7.2-tests" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-dom-0.7.2-sources" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-examples-0.7.2-sources" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-core-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="1_apache-mime4j-core-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-benchmark-0.7.2-sources" level="project" />
+    <orderEntry type="library" exported="" name="commons-logging-1.1.1" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-core-0.7.2-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-dom-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="1_apache-mime4j-dom-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-storage-0.7.2-sources" level="project" />
     <orderEntry type="library" exported="" name="support-annotations-22.1.1" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-storage-0.7.2-tests" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-storage-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="1_apache-mime4j-storage-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-examples-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="1_apache-mime4j-examples-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-benchmark-0.7.2-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="appcompat-v7-22.1.1" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-examples-0.7.2-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-nio-4.4.1" level="project" />
+    <orderEntry type="library" exported="" name="httpmime-4.3.3" level="project" />
+    <orderEntry type="library" exported="" name="httpcore-4.4.1" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-storage-0.7.2-javadoc" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-benchmark-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="1_apache-mime4j-benchmark-0.7.2" level="project" />
+    <orderEntry type="library" exported="" name="commons-cli-1.2" level="project" />
+    <orderEntry type="library" exported="" name="support-v4-22.1.1" level="project" />
+    <orderEntry type="library" exported="" name="apache-mime4j-core-0.7.2-sources" level="project" />
   </component>
 </module>

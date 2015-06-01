@@ -28,6 +28,9 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -92,19 +95,25 @@ public class MainActivity extends ActionBarActivity {
     }
 
     private void doPostRequest(){
-        String urlString = "https://flower-aimeechengdev.c9.io/testpost";
+        String urlString = "https://flower-aimeechengdev.c9.io/flower1";
         try
         {
             HttpClient client = new DefaultHttpClient();
             //HttpClient httpClient = HttpClientBuilder.create().build();
             HttpPost post = new HttpPost(urlString);
+//            MultipartEntityBuilder entityBuilder = MultipartEntityBuilder.create();
+//
+//            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+//            nameValuePairs.add(new BasicNameValuePair("email1", "email2"));
+//            nameValuePairs.add(new BasicNameValuePair("email1", "slgjlskjgsg"));
+//            nameValuePairs.add(new BasicNameValuePair("email2", "xkjfhgkdjfhgkdjfg"));
+//
+//            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 
-            List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
-            nameValuePairs.add(new BasicNameValuePair("email1", "email2"));
-            nameValuePairs.add(new BasicNameValuePair("email1", "slgjlskjgsg"));
-            nameValuePairs.add(new BasicNameValuePair("email2", "xkjfhgkdjfhgkdjfg"));
-
-            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+            builder.addPart("file", new FileBody(new File(imageFile.getAbsolutePath())));
+            post.setEntity(builder.build());
 
             HttpResponse response = client.execute(post);
             String response_str = response.toString();
@@ -135,40 +144,40 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         flowerName.setText("requestCode " + requestCode +" --- " + resultCode + " --- "+imageFile.getAbsolutePath());
+        Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        Uri selectedImageUri;
+        if(requestCode==0) {
+            selectedImageUri = imgUri;
+        }else {
+            selectedImageUri = data.getData();
+        }
+        getContentResolver().notifyChange(selectedImageUri, null);
+        ImageView imageView = (ImageView) findViewById(R.id.photo);
+        ContentResolver cr = getContentResolver();
+        Bitmap bitmap;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(cr, selectedImageUri);
+            imageView.setImageBitmap(bitmap);
+            Toast.makeText(this, "before dopost", Toast.LENGTH_LONG).show();
+            //   new Connection().execute();
+        } catch (Exception e) {
 
-                if(imageFile.exists()){
-                    Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
-                    getContentResolver().notifyChange(imgUri, null);
-                    ImageView imageView =  (ImageView)findViewById(R.id.photo);
-                    ContentResolver cr = getContentResolver();
-                    Bitmap bitmap;
-                    try{
-                        bitmap = MediaStore.Images.Media.getBitmap(cr, imgUri);
-                        imageView.setImageBitmap(bitmap);
-                        Toast.makeText(this, "before dopost", Toast.LENGTH_LONG).show();
-                     //   new Connection().execute();
-                    }catch(Exception e){
-
-                    }
-
-                }else{
-                    Toast.makeText(this, "error when saving", Toast.LENGTH_LONG).show();
-                }
-
+        }
     }
 
     public void openFile(View view){
         Toast.makeText(this, "openFile", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent,
+                "Select Picture"), 1);
     }
     public void uploadImage(View view){
         Toast.makeText(this, "uploadImage", Toast.LENGTH_SHORT).show();
         dialog = ProgressDialog.show(MainActivity.this, "", "Uploading file...", true);
 
-        new Thread(new Runnable() {
-            public void run() {
-                uploadFile(imageFile.getAbsolutePath());
-            }
-        }).start();
+        new Connection().execute();
     }
     public int uploadFile(String sourceFileUri) {
 
