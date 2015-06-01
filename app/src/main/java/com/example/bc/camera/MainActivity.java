@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -37,8 +40,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -56,6 +61,8 @@ public class MainActivity extends ActionBarActivity {
     int serverResponseCode = 0;
     String imagePath;
     Button uploadButton;
+    String ba1;
+    String responseStr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,19 +119,23 @@ public class MainActivity extends ActionBarActivity {
 //            nameValuePairs.add(new BasicNameValuePair("email1", "email2"));
 //            nameValuePairs.add(new BasicNameValuePair("email1", "slgjlskjgsg"));
 //            nameValuePairs.add(new BasicNameValuePair("email2", "xkjfhgkdjfhgkdjfg"));
+            ArrayList<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>();
+
+            nameValuePairs.add(new BasicNameValuePair("image",ba1));
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+//            String boundary = "-------------" + System.currentTimeMillis();
 //
-//            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
-            String boundary = "-------------" + System.currentTimeMillis();
-
-            post.setHeader("Content-type", "multipart/form-data; boundary=" + boundary);
-            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE).setBoundary(boundary);
-
-            File tmpfile = new File(imagePath);
-         //   FileBody fb = new FileBody(tmpfile);
-           FileBody fileBody = new FileBody(tmpfile, ContentType.DEFAULT_BINARY);
-            builder.addPart("file", fileBody);
-            post.setEntity(builder.build());
+//            post.setHeader("Content-type", "multipart/form-data; boundary=" + boundary);
+//            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+//            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE).setBoundary(boundary);
+//
+//            File tmpfile = new File(imagePath);
+//         //   FileBody fb = new FileBody(tmpfile);
+//           FileBody fileBody = new FileBody(tmpfile, ContentType.DEFAULT_BINARY);
+//
+//
+//            builder.addPart("Base64", ba1);
+ //           post.setEntity(builder.build());
 
             HttpResponse response = client.execute(post);
           //  String response_str = response.toString();
@@ -133,6 +144,11 @@ public class MainActivity extends ActionBarActivity {
           //  ResponseHandler<String> responseHandler = new BasicResponseHandler();
 // Response Body
          //   String responseBody = responseHandler.handleResponse(response);
+            HttpEntity entity = response.getEntity();
+
+            InputStream is = entity.getContent();
+            responseStr = EntityUtils.toString(response.getEntity());
+
             int tmp = 1;
   //          Toast.makeText(this, Integer.toString(statusCode), Toast.LENGTH_LONG).show();
   //          Toast.makeText(this, responseBody, Toast.LENGTH_LONG).show();
@@ -190,7 +206,12 @@ public class MainActivity extends ActionBarActivity {
     public void uploadImage(View view){
         Toast.makeText(this, "uploadImage", Toast.LENGTH_SHORT).show();
     //    dialog = ProgressDialog.show(MainActivity.this, "", "Uploading file...", true);
-
+        Bitmap bm = BitmapFactory.decodeFile(imagePath);
+        ByteArrayOutputStream bao = new ByteArrayOutputStream();
+        bm.compress(Bitmap.CompressFormat.JPEG, 90, bao);
+        byte[] ba = bao.toByteArray();
+        int arrayLength = ba.length;
+        ba1 = Base64.encodeToString(ba, 0, arrayLength, Base64.DEFAULT);
         new Connection().execute();
         Toast.makeText(this, "uploadImage finished", Toast.LENGTH_SHORT).show();
     }
