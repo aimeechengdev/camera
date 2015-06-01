@@ -28,6 +28,7 @@ import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.HttpMultipartMode;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
@@ -53,12 +54,16 @@ public class MainActivity extends ActionBarActivity {
     ProgressDialog dialog = null;
     String upLoadServerUri = null;
     int serverResponseCode = 0;
+    String imagePath;
+    Button uploadButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button camerButton = (Button)findViewById(R.id.button);
         Button fileButton = (Button)findViewById(R.id.button2);
+        uploadButton = (Button)findViewById(R.id.uploadImage);
+        uploadButton.setEnabled(false);
         flowerName= (TextView)findViewById(R.id.textView);
         upLoadServerUri = "https://flower-aimeechengdev.c9.io/flower1";
     }
@@ -109,19 +114,26 @@ public class MainActivity extends ActionBarActivity {
 //            nameValuePairs.add(new BasicNameValuePair("email2", "xkjfhgkdjfhgkdjfg"));
 //
 //            post.setEntity(new UrlEncodedFormEntity(nameValuePairs));
+            String boundary = "-------------" + System.currentTimeMillis();
 
+            post.setHeader("Content-type", "multipart/form-data; boundary=" + boundary);
             MultipartEntityBuilder builder = MultipartEntityBuilder.create();
-            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
-            builder.addPart("file", new FileBody(new File(imageFile.getAbsolutePath())));
+            builder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE).setBoundary(boundary);
+
+            File tmpfile = new File(imagePath);
+         //   FileBody fb = new FileBody(tmpfile);
+           FileBody fileBody = new FileBody(tmpfile, ContentType.DEFAULT_BINARY);
+            builder.addPart("file", fileBody);
             post.setEntity(builder.build());
 
             HttpResponse response = client.execute(post);
-            String response_str = response.toString();
+          //  String response_str = response.toString();
             int statusCode = response.getStatusLine().getStatusCode();
 
-            ResponseHandler<String> responseHandler = new BasicResponseHandler();
+          //  ResponseHandler<String> responseHandler = new BasicResponseHandler();
 // Response Body
-            String responseBody = responseHandler.handleResponse(response);
+         //   String responseBody = responseHandler.handleResponse(response);
+            int tmp = 1;
   //          Toast.makeText(this, Integer.toString(statusCode), Toast.LENGTH_LONG).show();
   //          Toast.makeText(this, responseBody, Toast.LENGTH_LONG).show();
          //   flowerName.setText(responseBody);
@@ -143,14 +155,15 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        flowerName.setText("requestCode " + requestCode +" --- " + resultCode + " --- "+imageFile.getAbsolutePath());
-        Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
+        flowerName.setText("requestCode " + requestCode +" --- " + resultCode);// + " --- "+imageFile.getAbsolutePath());
+       // Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
         Uri selectedImageUri;
         if(requestCode==0) {
             selectedImageUri = imgUri;
         }else {
             selectedImageUri = data.getData();
         }
+        imagePath = selectedImageUri.getPath();
         getContentResolver().notifyChange(selectedImageUri, null);
         ImageView imageView = (ImageView) findViewById(R.id.photo);
         ContentResolver cr = getContentResolver();
@@ -158,6 +171,7 @@ public class MainActivity extends ActionBarActivity {
         try {
             bitmap = MediaStore.Images.Media.getBitmap(cr, selectedImageUri);
             imageView.setImageBitmap(bitmap);
+            uploadButton.setEnabled(true);
             Toast.makeText(this, "before dopost", Toast.LENGTH_LONG).show();
             //   new Connection().execute();
         } catch (Exception e) {
@@ -175,9 +189,10 @@ public class MainActivity extends ActionBarActivity {
     }
     public void uploadImage(View view){
         Toast.makeText(this, "uploadImage", Toast.LENGTH_SHORT).show();
-        dialog = ProgressDialog.show(MainActivity.this, "", "Uploading file...", true);
+    //    dialog = ProgressDialog.show(MainActivity.this, "", "Uploading file...", true);
 
         new Connection().execute();
+        Toast.makeText(this, "uploadImage finished", Toast.LENGTH_SHORT).show();
     }
     public int uploadFile(String sourceFileUri) {
 
