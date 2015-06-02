@@ -63,6 +63,7 @@ public class MainActivity extends ActionBarActivity {
     Button uploadButton;
     String ba1;
     String responseStr;
+    Boolean responseFlag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +74,7 @@ public class MainActivity extends ActionBarActivity {
         uploadButton.setEnabled(false);
         flowerName= (TextView)findViewById(R.id.textView);
         upLoadServerUri = "https://flower-aimeechengdev.c9.io/flower1";
+        responseFlag = false;
     }
 
     @Override
@@ -146,13 +148,10 @@ public class MainActivity extends ActionBarActivity {
          //   String responseBody = responseHandler.handleResponse(response);
             HttpEntity entity = response.getEntity();
 
-            InputStream is = entity.getContent();
+          //  InputStream is = entity.getContent();
             responseStr = EntityUtils.toString(response.getEntity());
-
-            int tmp = 1;
-  //          Toast.makeText(this, Integer.toString(statusCode), Toast.LENGTH_LONG).show();
-  //          Toast.makeText(this, responseBody, Toast.LENGTH_LONG).show();
-         //   flowerName.setText(responseBody);
+System.out.println("response = " + responseStr);
+            responseFlag = true;
         }
         catch (Exception ex){
           //  Toast.makeText(this, "error in post", Toast.LENGTH_LONG).show();
@@ -171,7 +170,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        flowerName.setText("requestCode " + requestCode +" --- " + resultCode);// + " --- "+imageFile.getAbsolutePath());
+        flowerName.setText("requestCode " + requestCode + " --- " + resultCode);// + " --- "+imageFile.getAbsolutePath());
        // Toast.makeText(this, imageFile.getAbsolutePath(), Toast.LENGTH_LONG).show();
         Uri selectedImageUri;
         if(requestCode==0) {
@@ -213,6 +212,13 @@ public class MainActivity extends ActionBarActivity {
         int arrayLength = ba.length;
         ba1 = Base64.encodeToString(ba, 0, arrayLength, Base64.DEFAULT);
         new Connection().execute();
+        for (int i = 0; i < 1000; i++) {
+             android.os.SystemClock.sleep(1000);
+            if(responseFlag){
+                flowerName.setText(responseStr);
+                break;
+            }
+        }
         Toast.makeText(this, "uploadImage finished", Toast.LENGTH_SHORT).show();
     }
     public int uploadFile(String sourceFileUri) {
