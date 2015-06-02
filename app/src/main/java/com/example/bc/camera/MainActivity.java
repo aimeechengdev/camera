@@ -67,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
     String ba1;
     String responseStr;
     Boolean responseFlag;
+    Boolean cameraFlag;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,6 +133,7 @@ public class MainActivity extends ActionBarActivity {
         }
     }
     public void openCamera(View view){
+        cameraFlag = true;
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         imageFile = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "flower.jpg");
         imgUri = Uri.fromFile(imageFile);
@@ -158,12 +160,13 @@ public class MainActivity extends ActionBarActivity {
             imageView.setImageBitmap(bitmap);
             uploadButton.setEnabled(true);
             Toast.makeText(this, "Image ready to upload", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-
+        } catch (Exception ex) {
+            Log.e("Debug", "error1: " + ex.getMessage(), ex);
         }
     }
 
     public void openFile(View view){
+        cameraFlag = false;
         Toast.makeText(this, "openFile", Toast.LENGTH_SHORT).show();
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -176,12 +179,20 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, "uploadImage", Toast.LENGTH_SHORT).show();
         dialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Uploading file...", true);
         dialog.setCancelable(true);
-        Bitmap bm = BitmapFactory.decodeFile(imagePath);
-        ByteArrayOutputStream bao = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.JPEG, 90, bao);
-        byte[] ba = bao.toByteArray();
-        int arrayLength = ba.length;
-        ba1 = Base64.encodeToString(ba, 0, arrayLength, Base64.DEFAULT);
+            Uri selectedImageUri = Uri.parse(imagePath);
+            getContentResolver().notifyChange(selectedImageUri, null);
+            ContentResolver cr = getContentResolver();
+            ByteArrayOutputStream bao = new ByteArrayOutputStream();
+            try {
+                Bitmap bm = MediaStore.Images.Media.getBitmap(cr, selectedImageUri);
+                bm.compress(Bitmap.CompressFormat.JPEG, 90, bao);
+                byte[] ba = bao.toByteArray();
+                int arrayLength = ba.length;
+                ba1 = Base64.encodeToString(ba, 0, arrayLength, Base64.DEFAULT);
+            }catch(Exception ex){
+                Log.e("Debug", "error1: " + ex.getMessage(), ex);
+            }
+
         new Connection().execute();
         for (int i = 0; i < 1000; i++) {
              android.os.SystemClock.sleep(1000);
