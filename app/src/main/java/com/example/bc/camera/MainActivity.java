@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -200,8 +201,10 @@ public class MainActivity extends ActionBarActivity {
 
     public void uploadImage(View view){
         Toast.makeText(this, "uploadImage", Toast.LENGTH_SHORT).show();
-        dialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Uploading file...", true);
-        dialog.setCancelable(true);
+//        dialog = ProgressDialog.show(MainActivity.this, "", "Uploading file...", true);
+//        dialog.setCancelable(true);
+//        LinearLayout layout = (LinearLayout)findViewById(R.id.layout);
+//        layout.invalidate();
             Uri selectedImageUri = Uri.parse(imagePath);
             getContentResolver().notifyChange(selectedImageUri, null);
             ContentResolver cr = getContentResolver();
@@ -224,7 +227,7 @@ public class MainActivity extends ActionBarActivity {
                 break;
             }
         }
-        dialog.dismiss();
+    //    dialog.dismiss();
         cameraButton.setVisibility(View.GONE);
         fileButton.setVisibility(View.GONE);
         uploadButton.setVisibility(View.GONE);
