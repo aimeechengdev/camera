@@ -37,6 +37,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
@@ -105,11 +106,20 @@ public class MainActivity extends ActionBarActivity {
 
         return super.onOptionsItemSelected(item);
     }
-    private class Connection extends AsyncTask {
+    private class UploadConnection extends AsyncTask {
 
         @Override
         protected Object doInBackground(Object... arg0) {
             doPostRequest();
+            return null;
+        }
+    }
+
+    private class ConfirmConnection extends AsyncTask {
+
+        @Override
+        protected Object doInBackground(Object... arg0) {
+            doGetRequest();
             return null;
         }
     }
@@ -127,6 +137,19 @@ public class MainActivity extends ActionBarActivity {
             int statusCode = response.getStatusLine().getStatusCode();
             responseStr = EntityUtils.toString(response.getEntity());
             responseFlag = true;
+        }
+        catch (Exception ex){
+            Log.e("Debug", "error1: " + ex.getMessage(), ex);
+        }
+    }
+
+    private void doGetRequest(){
+        String urlString = "https://flower-aimeechengdev.c9.io/confirm";
+        try
+        {
+            HttpClient client = new DefaultHttpClient();
+            HttpGet get = new HttpGet(urlString);
+            HttpResponse response = client.execute(get);
         }
         catch (Exception ex){
             Log.e("Debug", "error1: " + ex.getMessage(), ex);
@@ -193,7 +216,7 @@ public class MainActivity extends ActionBarActivity {
                 Log.e("Debug", "error1: " + ex.getMessage(), ex);
             }
 
-        new Connection().execute();
+        new UploadConnection().execute();
         for (int i = 0; i < 1000; i++) {
              android.os.SystemClock.sleep(1000);
             if(responseFlag){
@@ -210,8 +233,7 @@ public class MainActivity extends ActionBarActivity {
         Toast.makeText(this, "uploadImage finished", Toast.LENGTH_SHORT).show();
     }
     public void confirm(View view){
-
-      //  new Connection().execute();
+        new ConfirmConnection().execute();
         flowerName.setText("Please use your camera to capture a flower or find a photo from your library. And then upload the photo to get result back.");
         cameraButton.setVisibility(View.VISIBLE);
         fileButton.setVisibility(View.VISIBLE);
@@ -221,8 +243,6 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public void cancel(View view){
-
-        //  new Connection().execute();
         flowerName.setText("Please use your camera to capture a flower or find a photo from your library. And then upload the photo to get result back.");
         cameraButton.setVisibility(View.VISIBLE);
         fileButton.setVisibility(View.VISIBLE);
