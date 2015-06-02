@@ -57,10 +57,13 @@ public class MainActivity extends ActionBarActivity {
     private File imageFile;
     Uri imgUri;
     ProgressDialog dialog = null;
-    String upLoadServerUri = null;
     int serverResponseCode = 0;
     String imagePath;
+    Button cameraButton;
+    Button fileButton;
     Button uploadButton;
+    Button confirmButton;
+    Button cancelButton;
     String ba1;
     String responseStr;
     Boolean responseFlag;
@@ -68,12 +71,15 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Button camerButton = (Button)findViewById(R.id.button);
-        Button fileButton = (Button)findViewById(R.id.button2);
+        cameraButton = (Button)findViewById(R.id.camera);
+        fileButton = (Button)findViewById(R.id.file);
         uploadButton = (Button)findViewById(R.id.uploadImage);
         uploadButton.setEnabled(false);
+        confirmButton = (Button)findViewById(R.id.confirm);
+        confirmButton.setVisibility(View.GONE);
+        cancelButton = (Button)findViewById(R.id.cancel);
+        cancelButton.setVisibility(View.GONE);
         flowerName= (TextView)findViewById(R.id.textView);
-        upLoadServerUri = "https://flower-aimeechengdev.c9.io/flower1";
         responseFlag = false;
     }
 
@@ -180,11 +186,37 @@ public class MainActivity extends ActionBarActivity {
         for (int i = 0; i < 1000; i++) {
              android.os.SystemClock.sleep(1000);
             if(responseFlag){
-                flowerName.setText(responseStr);
+                flowerName.setText("This might be " + responseStr + ". If you are sure it is " + responseStr + ". Please press CONFIRM button, otherwise press CANCEL button.");
                 break;
             }
         }
         dialog.dismiss();
+        cameraButton.setVisibility(View.GONE);
+        fileButton.setVisibility(View.GONE);
+        uploadButton.setVisibility(View.GONE);
+        confirmButton.setVisibility(View.VISIBLE);
+        cancelButton.setVisibility(View.VISIBLE);
         Toast.makeText(this, "uploadImage finished", Toast.LENGTH_SHORT).show();
+    }
+    public void confirm(View view){
+
+      //  new Connection().execute();
+        flowerName.setText("Please use your camera to capture a flower or find a photo from your library. And then upload the photo to get result back.");
+        cameraButton.setVisibility(View.VISIBLE);
+        fileButton.setVisibility(View.VISIBLE);
+        uploadButton.setVisibility(View.VISIBLE);
+        confirmButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
+    }
+
+    public void cancel(View view){
+
+        //  new Connection().execute();
+        flowerName.setText("Please use your camera to capture a flower or find a photo from your library. And then upload the photo to get result back.");
+        cameraButton.setVisibility(View.VISIBLE);
+        fileButton.setVisibility(View.VISIBLE);
+        uploadButton.setVisibility(View.VISIBLE);
+        confirmButton.setVisibility(View.GONE);
+        cancelButton.setVisibility(View.GONE);
     }
 }
